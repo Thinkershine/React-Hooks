@@ -1,8 +1,10 @@
-import React, { useReducer } from "react";
+import React, { useReducer, createContext } from "react";
 import uuid from "uuid";
 import Filter from "./filter";
 import AddToDo from "./addToDo";
 import ToDoList from "./toDoList";
+
+export const ToDoContext = createContext(null);
 
 const initialTodos = [
   {
@@ -96,12 +98,14 @@ const ToDoApp = () => {
   return (
     <div style={style}>
       <h1>ToDos</h1>
-      <hr />
-      <ToDoList dispatch={dispatchTodos} filteredTodos={filteredTodos} />
-      <hr />
-      <AddToDo dispatch={dispatchTodos} />
-      <Filter dispatch={dispatchFilter} />
-      <hr />
+      <ToDoContext.Provider value={dispatchTodos}>
+        <hr />
+        <ToDoList filteredTodos={filteredTodos} />
+        <hr />
+        <AddToDo />
+        <Filter dispatch={dispatchFilter} />
+        <hr />
+      </ToDoContext.Provider>
     </div>
   );
 };

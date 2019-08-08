@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import uuid from "uuid";
+import { ToDoContext } from "./todoApp";
 
-const AddToDo = ({ dispatch }) => {
+const AddToDo = () => {
+  const dispatch = useContext(ToDoContext);
   const [task, setTask] = useState("");
   const addTask = () => {
     if (task === "") return;

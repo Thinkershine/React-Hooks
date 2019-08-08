@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ToDoContext } from "./todoApp";
 
-const ToDoItem = ({ dispatch, todo }) => {
+const ToDoItem = ({ todo }) => {
+  const dispatch = useContext(ToDoContext);
   const handleChangeCheckbox = () => {
     // Not Elegant Way ...
     // const todo = todos.filter(todo => todo.id === id);
@@ -46,13 +48,13 @@ const ToDoItem = ({ dispatch, todo }) => {
   );
 };
 
-const ToDoList = ({ filteredTodos, dispatch }) => {
+const ToDoList = ({ filteredTodos }) => {
   return (
     <div>
       <h2>Tasks</h2>
       <ul style={{ listStyle: "none" }}>
         {filteredTodos.map(todo => (
-          <ToDoItem key={todo.id} dispatch={dispatch} todo={todo} />
+          <ToDoItem key={todo.id} todo={todo} />
         ))}
       </ul>
     </div>
