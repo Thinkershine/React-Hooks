@@ -1,26 +1,27 @@
 import React, { useState } from "react";
+import uuid from "uuid";
 
-let initialTodos = [
+const initialTodos = [
   {
-    id: 1,
+    id: uuid(),
     task: "Learn React useState",
     complete: true
   },
   {
-    id: 2,
+    id: uuid(),
     task: "Learn React useReducer",
     complete: true
   },
   {
-    id: 3,
+    id: uuid(),
     task: "Learn React useContext",
     complete: true
   }
 ];
 
 const ToDoApp = () => {
+  const [todos, setTodos] = useState(initialTodos);
   const [task, setTask] = useState("");
-  const [currentID, setCurrentID] = useState(initialTodos.length);
 
   const handleChangeInput = event => {
     console.log("Change Input", event.target.value);
@@ -28,13 +29,14 @@ const ToDoApp = () => {
   };
 
   const addTask = () => {
-    setCurrentID(currentID + 1);
-    initialTodos = initialTodos.concat({
-      id: currentID + 1,
-      task: task,
-      completed: true
-    });
-    console.log("NEW TODOS", initialTodos);
+    setTodos(
+      todos.concat({
+        id: uuid(),
+        task: task,
+        completed: true
+      })
+    );
+    setTask("");
   };
 
   const style = {
@@ -48,7 +50,7 @@ const ToDoApp = () => {
       <h1>ToDos</h1>
       <hr />
       <ul style={{ listStyle: "none" }}>
-        {initialTodos.map(todo => (
+        {todos.map(todo => (
           <li key={todo.id}>{todo.task}</li>
         ))}
       </ul>
