@@ -1,7 +1,8 @@
-import React, { useState, useReducer } from "react";
+import React, { useReducer } from "react";
 import uuid from "uuid";
 import Filter from "./filter";
 import AddToDo from "./addToDo";
+import ToDoList from "./toDoList";
 
 const initialTodos = [
   {
@@ -67,9 +68,6 @@ const todoReducer = (state, action) => {
 };
 
 const ToDoApp = () => {
-  // OLD With useState
-  //   const [todos, setTodos] = useState(initialTodos);
-
   const [filter, dispatchFilter] = useReducer(filterReducer, "ALL");
   const [todos, dispatchTodos] = useReducer(todoReducer, initialTodos);
 
@@ -89,34 +87,6 @@ const ToDoApp = () => {
     return false;
   });
 
-  const handleChangeCheckbox = todo => {
-    // Not Elegant Way ...
-    // const todo = todos.filter(todo => todo.id === id);
-    // console.log("TODO", todo);
-    // if (todo.complete) {
-    //   dispatchTodos({ type: "UNDO_TODO", id: id });
-    // } else {
-    //   dispatchTodos({ type: "DO_TODO", id: id });
-    // }
-
-    // Much More Elegant Way
-    dispatchTodos({
-      type: todo.complete ? "UNDO_TODO" : "DO_TODO",
-      id: todo.id
-    });
-
-    // OLD With useState
-    // setTodos(
-    //   todos.map(todo => {
-    //     if (todo.id === id) {
-    //       return { ...todo, complete: !todo.complete };
-    //     } else {
-    //       return todo;
-    //     }
-    //   })
-    // );
-  };
-
   const style = {
     border: "1px  solid black",
     padding: 10,
@@ -127,24 +97,7 @@ const ToDoApp = () => {
     <div style={style}>
       <h1>ToDos</h1>
       <hr />
-      <ul style={{ listStyle: "none" }}>
-        {filteredTodos.map(todo => (
-          <li key={todo.id}>
-            <label>
-              <input
-                type="checkbox"
-                checked={todo.complete}
-                onChange={() => handleChangeCheckbox(todo)}
-              />
-              {todo.complete ? (
-                <em style={{ textDecoration: "line-through" }}>{todo.task}</em>
-              ) : (
-                todo.task
-              )}
-            </label>
-          </li>
-        ))}
-      </ul>
+      <ToDoList dispatch={dispatchTodos} filteredTodos={filteredTodos} />
       <hr />
       <AddToDo dispatch={dispatchTodos} />
       <Filter dispatch={dispatchFilter} />
