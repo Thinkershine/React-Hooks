@@ -1,27 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import uuid from "uuid";
 
 const initialTodos = [
   {
     id: uuid(),
     task: "Learn React useState",
-    complete: true
+    complete: false
   },
   {
     id: uuid(),
     task: "Learn React useReducer",
-    complete: true
+    complete: false
   },
   {
     id: uuid(),
     task: "Learn React useContext",
-    complete: true
+    complete: false
   }
 ];
+
+const filterReducer = (state, action) => {
+  switch (action.type) {
+    case "SHOW_ALL":
+      return "ALL";
+    case "SHOW_COMPLETED":
+      return "COMPLETED";
+    case "SHOW_UNCOMPLETED":
+      return "UNCOMPLETED";
+    default:
+      throw new Error();
+  }
+};
 
 const ToDoApp = () => {
   const [todos, setTodos] = useState(initialTodos);
   const [task, setTask] = useState("");
+
+  const [filter, dispatchFilter] = useReducer(filterReducer, "ALL");
+
+  const filteredTodos = todos.filter(todo => {
+    console.log("What", todo);
+    if (filter === "ALL") {
+      return true;
+    }
+
+    if (filter === "COMPLETED" && todo.complete) {
+      return true;
+    }
+
+    if (filter === "UNCOMPLETED" && !todo.complete) {
+      return true;
+    }
+
+    return false;
+  });
 
   const handleChangeInput = event => {
     setTask(event.target.value);
@@ -31,12 +63,24 @@ const ToDoApp = () => {
     setTodos(
       todos.map(todo => {
         if (todo.id === id) {
-          return { ...todo, completed: !todo.completed };
+          return { ...todo, complete: !todo.complete };
         } else {
           return todo;
         }
       })
     );
+  };
+
+  const handleShowAll = () => {
+    dispatchFilter({ type: "SHOW_ALL" });
+  };
+
+  const handleShowCompleted = () => {
+    dispatchFilter({ type: "SHOW_COMPLETED" });
+  };
+
+  const handleShowUncompleted = () => {
+    dispatchFilter({ type: "SHOW_UNCOMPLETED" });
   };
 
   const addTask = () => {
@@ -62,15 +106,15 @@ const ToDoApp = () => {
       <h1>ToDos</h1>
       <hr />
       <ul style={{ listStyle: "none" }}>
-        {todos.map(todo => (
+        {filteredTodos.map(todo => (
           <li key={todo.id}>
             <label>
               <input
                 type="checkbox"
-                checked={todo.completed}
+                checked={todo.complete}
                 onChange={() => handleChangeCheckbox(todo.id)}
               />
-              {todo.completed ? (
+              {todo.complete ? (
                 <em style={{ textDecoration: "line-through" }}>{todo.task}</em>
               ) : (
                 todo.task
@@ -79,8 +123,13 @@ const ToDoApp = () => {
           </li>
         ))}
       </ul>
+      <hr />
       <input placeholder="Add ToDo" value={task} onChange={handleChangeInput} />
       <button onClick={() => addTask()}>Add ToDo</button>
+      <hr />
+      <button onClick={handleShowAll}>Show All</button>
+      <button onClick={handleShowCompleted}>Show Completed</button>
+      <button onClick={handleShowUncompleted}>Show Uncompleted</button>
     </div>
   );
 };
