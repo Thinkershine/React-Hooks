@@ -24,16 +24,28 @@ const ToDoApp = () => {
   const [task, setTask] = useState("");
 
   const handleChangeInput = event => {
-    console.log("Change Input", event.target.value);
     setTask(event.target.value);
   };
 
+  const handleChangeCheckbox = id => {
+    setTodos(
+      todos.map(todo => {
+        if (todo.id === id) {
+          return { ...todo, completed: !todo.completed };
+        } else {
+          return todo;
+        }
+      })
+    );
+  };
+
   const addTask = () => {
+    if (task === "") return;
     setTodos(
       todos.concat({
         id: uuid(),
         task: task,
-        completed: true
+        completed: false
       })
     );
     setTask("");
@@ -51,7 +63,20 @@ const ToDoApp = () => {
       <hr />
       <ul style={{ listStyle: "none" }}>
         {todos.map(todo => (
-          <li key={todo.id}>{todo.task}</li>
+          <li key={todo.id}>
+            <label>
+              <input
+                type="checkbox"
+                checked={todo.completed}
+                onChange={() => handleChangeCheckbox(todo.id)}
+              />
+              {todo.completed ? (
+                <em style={{ textDecoration: "line-through" }}>{todo.task}</em>
+              ) : (
+                todo.task
+              )}
+            </label>
+          </li>
         ))}
       </ul>
       <input placeholder="Add ToDo" value={task} onChange={handleChangeInput} />
