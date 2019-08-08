@@ -32,14 +32,47 @@ const filterReducer = (state, action) => {
   }
 };
 
+const todoReducer = (state, action) => {
+  switch (action.type) {
+    case "DO_TODO":
+      console.log("DO TODO", action);
+      return state.map(todo => {
+        if (todo.id === action.id) {
+          return { ...todo, complete: true };
+        } else {
+          return todo;
+        }
+      });
+    case "UNDO_TODO":
+      console.log("UNDO TODO", action);
+      return state.map(todo => {
+        if (todo.id === action.id) {
+          return { ...todo, complete: false };
+        } else {
+          return todo;
+        }
+      });
+    case "ADD_TODO":
+      console.log("ADD TODO", action);
+      return state.concat({
+        id: action.id,
+        task: action.task,
+        complete: action.complete
+      });
+    default:
+      return new Error();
+  }
+};
+
 const ToDoApp = () => {
-  const [todos, setTodos] = useState(initialTodos);
+  // OLD With useState
+  //   const [todos, setTodos] = useState(initialTodos);
   const [task, setTask] = useState("");
 
   const [filter, dispatchFilter] = useReducer(filterReducer, "ALL");
+  const [todos, dispatchTodos] = useReducer(todoReducer, initialTodos);
 
   const filteredTodos = todos.filter(todo => {
-    console.log("What", todo);
     if (filter === "ALL") {
       return true;
     }
@@ -59,16 +92,32 @@ const ToDoApp = () => {
     setTask(event.target.value);
   };
 
-  const handleChangeCheckbox = id => {
-    setTodos(
-      todos.map(todo => {
-        if (todo.id === id) {
-          return { ...todo, complete: !todo.complete };
-        } else {
-          return todo;
-        }
-      })
-    );
+  const handleChangeCheckbox = todo => {
+    // Not Elegant Way ...
+    // const todo = todos.filter(todo => todo.id === id);
+    // console.log("TODO", todo);
+    // if (todo.complete) {
+    //   dispatchTodos({ type: "UNDO_TODO", id: id });
+    // } else {
+    //   dispatchTodos({ type: "DO_TODO", id: id });
+    // }
+
+    // Much More Elegant Way
+    dispatchTodos({
+      type: todo.complete ? "UNDO_TODO" : "DO_TODO",
+      id: todo.id
+    });
+
+    // OLD With useState
+    // setTodos(
+    //   todos.map(todo => {
+    //     if (todo.id === id) {
+    //       return { ...todo, complete: !todo.complete };
+    //     } else {
+    //       return todo;
+    //     }
+    //   })
+    // );
   };
 
   const handleShowAll = () => {
@@ -85,13 +134,21 @@ const ToDoApp = () => {
 
   const addTask = () => {
     if (task === "") return;
-    setTodos(
-      todos.concat({
-        id: uuid(),
-        task: task,
-        completed: false
-      })
-    );
+
+    dispatchTodos({
+      type: "ADD_TODO",
+      id: uuid(),
+      task: task,
+      complete: false
+    });
+    // OLD With useState
+    // setTodos(
+    //   todos.concat({
+    //     id: uuid(),
+    //     task: task,
+    //     completed: false
+    //   })
+    // );
     setTask("");
   };
 
@@ -112,7 +169,7 @@ const ToDoApp = () => {
               <input
                 type="checkbox"
                 checked={todo.complete}
-                onChange={() => handleChangeCheckbox(todo.id)}
+                onChange={() => handleChangeCheckbox(todo)}
               />
               {todo.complete ? (
                 <em style={{ textDecoration: "line-through" }}>{todo.task}</em>
