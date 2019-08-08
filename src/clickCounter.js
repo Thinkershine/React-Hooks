@@ -5,7 +5,7 @@ const ClickCounter = () => {
   const [clickCount, setClickCount] = React.useState(0);
 
   const increaseCounter = () => {
-    setCount(count + 1);
+    setTimeout(() => setCount(count => count + 1), 1000);
     setClickCount(clickCount + 1);
   };
 
