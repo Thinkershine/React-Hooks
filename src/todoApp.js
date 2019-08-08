@@ -1,6 +1,7 @@
 import React, { useState, useReducer } from "react";
 import uuid from "uuid";
 import Filter from "./filter";
+import AddToDo from "./addToDo";
 
 const initialTodos = [
   {
@@ -68,7 +69,6 @@ const todoReducer = (state, action) => {
 const ToDoApp = () => {
   // OLD With useState
   //   const [todos, setTodos] = useState(initialTodos);
-  const [task, setTask] = useState("");
 
   const [filter, dispatchFilter] = useReducer(filterReducer, "ALL");
   const [todos, dispatchTodos] = useReducer(todoReducer, initialTodos);
@@ -88,10 +88,6 @@ const ToDoApp = () => {
 
     return false;
   });
-
-  const handleChangeInput = event => {
-    setTask(event.target.value);
-  };
 
   const handleChangeCheckbox = todo => {
     // Not Elegant Way ...
@@ -119,26 +115,6 @@ const ToDoApp = () => {
     //     }
     //   })
     // );
-  };
-
-  const addTask = () => {
-    if (task === "") return;
-
-    dispatchTodos({
-      type: "ADD_TODO",
-      id: uuid(),
-      task: task,
-      complete: false
-    });
-    // OLD With useState
-    // setTodos(
-    //   todos.concat({
-    //     id: uuid(),
-    //     task: task,
-    //     completed: false
-    //   })
-    // );
-    setTask("");
   };
 
   const style = {
@@ -170,9 +146,8 @@ const ToDoApp = () => {
         ))}
       </ul>
       <hr />
+      <AddToDo dispatch={dispatchTodos} />
       <Filter dispatch={dispatchFilter} />
-      <input placeholder="Add ToDo" value={task} onChange={handleChangeInput} />
-      <button onClick={() => addTask()}>Add ToDo</button>
       <hr />
     </div>
   );
