@@ -30,7 +30,7 @@ const CounterWithReducer = () => {
 
   return (
     <div style={style}>
-      <h1>Counter with useReducer</h1>
+      <h1>Click Counter with useReducer</h1>
       <hr />
       <h2>Count : {state.count}</h2>
       <hr />

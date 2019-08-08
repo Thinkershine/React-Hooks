@@ -22,7 +22,7 @@ const ClickCounter = () => {
 
   return (
     <div style={style}>
-      <h1>Click Counter</h1>
+      <h1>Click Counter with useState</h1>
       <hr />
       <h2>Count : {count}</h2>
       <h2>Total Clicks : {clickCount}</h2>
