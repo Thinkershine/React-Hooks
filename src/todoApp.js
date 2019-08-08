@@ -1,5 +1,6 @@
 import React, { useState, useReducer } from "react";
 import uuid from "uuid";
+import Filter from "./filter";
 
 const initialTodos = [
   {
@@ -120,18 +121,6 @@ const ToDoApp = () => {
     // );
   };
 
-  const handleShowAll = () => {
-    dispatchFilter({ type: "SHOW_ALL" });
-  };
-
-  const handleShowCompleted = () => {
-    dispatchFilter({ type: "SHOW_COMPLETED" });
-  };
-
-  const handleShowUncompleted = () => {
-    dispatchFilter({ type: "SHOW_UNCOMPLETED" });
-  };
-
   const addTask = () => {
     if (task === "") return;
 
@@ -181,12 +170,10 @@ const ToDoApp = () => {
         ))}
       </ul>
       <hr />
+      <Filter dispatch={dispatchFilter} />
       <input placeholder="Add ToDo" value={task} onChange={handleChangeInput} />
       <button onClick={() => addTask()}>Add ToDo</button>
       <hr />
-      <button onClick={handleShowAll}>Show All</button>
-      <button onClick={handleShowCompleted}>Show Completed</button>
-      <button onClick={handleShowUncompleted}>Show Uncompleted</button>
     </div>
   );
 };
