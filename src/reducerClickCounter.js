@@ -3,9 +3,17 @@ import React, { useReducer } from "react";
 const counterReducer = (state, action) => {
   switch (action.type) {
     case "INCREASE":
-      return { ...state, count: state.count + 1 };
+      return {
+        ...state,
+        count: state.count + 1,
+        totalCount: state.totalCount + 1
+      };
     case "DECREASE":
-      return { ...state, count: state.count - 1 };
+      return {
+        ...state,
+        count: state.count - 1,
+        totalCount: state.totalCount + 1
+      };
     default:
       throw new Error();
   }
@@ -13,7 +21,8 @@ const counterReducer = (state, action) => {
 
 const CounterWithReducer = () => {
   const [state, dispatch] = useReducer(counterReducer, {
-    count: 0
+    count: 0,
+    totalCount: 0
   });
   const handleIncrease = () => {
     dispatch({ type: "INCREASE" });
@@ -33,9 +42,10 @@ const CounterWithReducer = () => {
       <h1>Click Counter with useReducer</h1>
       <hr />
       <h2>Count : {state.count}</h2>
+      <h2>Total Count : {state.totalCount}</h2>
       <hr />
       <button onClick={handleIncrease}>Increase</button>
-      <button onClick={handleDecrease}>Increase</button>
+      <button onClick={handleDecrease}>Decrease</button>
     </div>
   );
 };
