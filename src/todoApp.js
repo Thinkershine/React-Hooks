@@ -64,6 +64,9 @@ const todoReducer = (state, action) => {
         task: action.task,
         complete: action.complete
       });
+    case "LOAD_TODOS":
+      console.log("LOAD TODOS", action);
+      return (state = action.payload);
     default:
       return new Error();
   }
@@ -74,6 +77,7 @@ const ToDoApp = () => {
   const [todos, dispatchTodos] = useReducer(todoReducer, initialTodos);
 
   const filteredTodos = todos.filter(todo => {
+    console.log("TODOS", todos);
     if (filter === "ALL") {
       return true;
     }
@@ -95,6 +99,17 @@ const ToDoApp = () => {
     margin: 5
   };
 
+  const saveToDo = () => {
+    localStorage.setItem("ToDos", JSON.stringify(todos));
+  };
+
+  const loadToDo = () => {
+    dispatchTodos({
+      type: "LOAD_TODOS",
+      payload: JSON.parse(localStorage.getItem("ToDos"))
+    });
+  };
+
   return (
     <div style={style}>
       <h1>ToDos</h1>
@@ -106,6 +121,8 @@ const ToDoApp = () => {
         <Filter dispatch={dispatchFilter} />
         <hr />
       </ToDoContext.Provider>
+      <button onClick={saveToDo}>Save</button>
+      <button onClick={loadToDo}>Load</button>
     </div>
   );
 };
