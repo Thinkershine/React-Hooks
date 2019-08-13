@@ -77,7 +77,6 @@ const ToDoApp = () => {
   const [todos, dispatchTodos] = useReducer(todoReducer, initialTodos);
 
   const filteredTodos = todos.filter(todo => {
-    console.log("TODOS", todos);
     if (filter === "ALL") {
       return true;
     }
